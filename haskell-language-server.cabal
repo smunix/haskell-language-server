@@ -210,7 +210,7 @@ flag brittany
 
 flag dynamic
   description: Build with the dyn rts
-  default:     True
+  default:     False
   manual:      True
 
 common example-plugins

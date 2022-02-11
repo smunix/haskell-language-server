@@ -14,9 +14,7 @@
       flake = false;
     };
     flake-utils.url = "github:numtide/flake-utils";
-    pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix";
-    };
+    pre-commit-hooks = { url = "github:cachix/pre-commit-hooks.nix"; };
     gitignore = {
       url = "github:hercules-ci/gitignore.nix";
       flake = false;
@@ -24,40 +22,48 @@
 
     # List of hackage dependencies
     lsp = {
-      url = "https://hackage.haskell.org/package/lsp-1.4.0.0/lsp-1.4.0.0.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/lsp-1.4.0.0/lsp-1.4.0.0.tar.gz";
       flake = false;
     };
     lsp-types = {
-      url = "https://hackage.haskell.org/package/lsp-types-1.4.0.1/lsp-types-1.4.0.1.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/lsp-types-1.4.0.1/lsp-types-1.4.0.1.tar.gz";
       flake = false;
     };
     lsp-test = {
-      url = "https://hackage.haskell.org/package/lsp-test-0.14.0.2/lsp-test-0.14.0.2.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/lsp-test-0.14.0.2/lsp-test-0.14.0.2.tar.gz";
       flake = false;
     };
     ghc-exactprint = {
-      url = "https://hackage.haskell.org/package/ghc-exactprint-1.4.1/ghc-exactprint-1.4.1.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/ghc-exactprint-1.4.1/ghc-exactprint-1.4.1.tar.gz";
       flake = false;
     };
     constraints-extras = {
-      url = "https://hackage.haskell.org/package/constraints-extras-0.3.2.1/constraints-extras-0.3.2.1.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/constraints-extras-0.3.2.1/constraints-extras-0.3.2.1.tar.gz";
       flake = false;
     };
     retrie = {
-      url = "https://hackage.haskell.org/package/retrie-1.2.0.1/retrie-1.2.0.1.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/retrie-1.2.0.1/retrie-1.2.0.1.tar.gz";
       flake = false;
     };
     fourmolu = {
-      url = "https://hackage.haskell.org/package/fourmolu-0.5.0.1/fourmolu-0.5.0.1.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/fourmolu-0.5.0.1/fourmolu-0.5.0.1.tar.gz";
       flake = false;
     };
     hlint = {
-      url = "https://hackage.haskell.org/package/hlint-3.3.6/hlint-3.3.6.tar.gz";
+      url =
+        "https://hackage.haskell.org/package/hlint-3.3.6/hlint-3.3.6.tar.gz";
       flake = false;
     };
   };
-  outputs =
-    inputs@{ self, nixpkgs, flake-compat, flake-utils, pre-commit-hooks, gitignore, ... }:
+  outputs = inputs@{ self, nixpkgs, flake-compat, flake-utils, pre-commit-hooks
+    , gitignore, ... }:
     {
       overlay = final: prev:
         with prev;
@@ -103,27 +109,30 @@
           tweaks = hself: hsuper:
             with haskell.lib; {
               # Patches don't apply
-              github = overrideCabal hsuper.github (drv: { patches = []; });
+              github = overrideCabal hsuper.github (drv: { patches = [ ]; });
               # GHCIDE requires hie-bios >=0.8 && <0.9.0
               hie-bios = hself.hie-bios_0_8_0;
               # We need an older version
               hiedb = hself.hiedb_0_4_1_0;
 
-              lsp = hsuper.callCabal2nix "lsp" inputs.lsp {};
-              lsp-types = hsuper.callCabal2nix "lsp-types" inputs.lsp-types {};
-              lsp-test = hsuper.callCabal2nix "lsp-test" inputs.lsp-test {};
+              lsp = hsuper.callCabal2nix "lsp" inputs.lsp { };
+              lsp-types = hsuper.callCabal2nix "lsp-types" inputs.lsp-types { };
+              lsp-test = hsuper.callCabal2nix "lsp-test" inputs.lsp-test { };
 
               implicit-hie-cradle = hself.callCabal2nix "implicit-hie-cradle"
                 (builtins.fetchTarball {
-                  url = "https://hackage.haskell.org/package/implicit-hie-cradle-0.3.0.5/implicit-hie-cradle-0.3.0.5.tar.gz";
-                  sha256 = "15a7g9x6cjk2b92hb2wilxx4550msxp1pmk5a2shiva821qaxnfq";
+                  url =
+                    "https://hackage.haskell.org/package/implicit-hie-cradle-0.3.0.5/implicit-hie-cradle-0.3.0.5.tar.gz";
+                  sha256 =
+                    "15a7g9x6cjk2b92hb2wilxx4550msxp1pmk5a2shiva821qaxnfq";
                 }) { };
 
               # https://github.com/NixOS/nixpkgs/issues/140774
-              ormolu =
-                if final.system == "aarch64-darwin"
-                then overrideCabal hsuper.ormolu (_: { enableSeparateBinOutput = false; })
-                else hsuper.ormolu;
+              ormolu = if final.system == "aarch64-darwin" then
+                overrideCabal hsuper.ormolu
+                (_: { enableSeparateBinOutput = false; })
+              else
+                hsuper.ormolu;
             };
 
           hlsSources =
@@ -134,8 +143,10 @@
               overrides = lib.composeExtensions (old.overrides or (_: _: { }))
                 haskellOverrides;
             })).extend (hself: hsuper:
-              # disable all checks for our packages
-              builtins.mapAttrs (_: drv: haskell.lib.dontCheck drv)
+              # disable all checks and profiling for our packages
+              builtins.mapAttrs (_: drv:
+                with haskell.lib;
+                disableLibraryProfiling (dontCheck (dontHaddock drv)))
               (lib.composeExtensions
                 (haskell.lib.packageSourceOverrides hlsSources) tweaks hself
                 hsuper));
@@ -162,8 +173,11 @@
               chmod +x $dest
             '';
         };
-    } // (flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" "aarch64-darwin" ])
-    (system:
+    } // (flake-utils.lib.eachSystem [
+      "x86_64-linux"
+      "x86_64-darwin"
+      "aarch64-darwin"
+    ]) (system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -172,38 +186,41 @@
         };
 
         # Pre-commit hooks to run stylish-haskell
-        pre-commit-check = hpkgs: pre-commit-hooks.lib.${system}.run {
-          src = ./.;
-          hooks = {
-            stylish-haskell.enable = true;
-            # use stylish-haskell with our target ghc
-            stylish-haskell.entry = pkgs.lib.mkForce "${hpkgs.stylish-haskell}/bin/stylish-haskell --inplace";
-            stylish-haskell.excludes = [
-              # Ignored files
-              "^Setup.hs$"
-              "test/testdata/.*$"
-              "test/data/.*$"
-              "test/manual/lhs/.*$"
-              "^hie-compat/.*$"
-              "^plugins/hls-tactics-plugin/.*$"
+        pre-commit-check = hpkgs:
+          pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              stylish-haskell.enable = true;
+              # use stylish-haskell with our target ghc
+              stylish-haskell.entry = pkgs.lib.mkForce
+                "${hpkgs.stylish-haskell}/bin/stylish-haskell --inplace";
+              stylish-haskell.excludes = [
+                # Ignored files
+                "^Setup.hs$"
+                "test/testdata/.*$"
+                "test/data/.*$"
+                "test/manual/lhs/.*$"
+                "^hie-compat/.*$"
+                "^plugins/hls-tactics-plugin/.*$"
 
-              # Temporarily ignored files
-              # Stylish-haskell (and other formatters) does not work well with some CPP usages in these files
-              "^ghcide/src/Development/IDE/GHC/Compat.hs$"
-              "^ghcide/src/Development/IDE/Plugin/CodeAction/ExactPrint.hs$"
-              "^ghcide/src/Development/IDE/GHC/Compat/Core.hs$"
-              "^ghcide/src/Development/IDE/Spans/Pragmas.hs$"
-              "^ghcide/src/Development/IDE/LSP/Outline.hs$"
-              "^plugins/hls-splice-plugin/src/Ide/Plugin/Splice.hs$"
-              "^ghcide/test/exe/Main.hs$"
-              "ghcide/src/Development/IDE/Core/Rules.hs"
-              "^hls-test-utils/src/Test/Hls/Util.hs$"
-            ];
+                # Temporarily ignored files
+                # Stylish-haskell (and other formatters) does not work well with some CPP usages in these files
+                "^ghcide/src/Development/IDE/GHC/Compat.hs$"
+                "^ghcide/src/Development/IDE/Plugin/CodeAction/ExactPrint.hs$"
+                "^ghcide/src/Development/IDE/GHC/Compat/Core.hs$"
+                "^ghcide/src/Development/IDE/Spans/Pragmas.hs$"
+                "^ghcide/src/Development/IDE/LSP/Outline.hs$"
+                "^plugins/hls-splice-plugin/src/Ide/Plugin/Splice.hs$"
+                "^ghcide/test/exe/Main.hs$"
+                "ghcide/src/Development/IDE/Core/Rules.hs"
+                "^hls-test-utils/src/Test/Hls/Util.hs$"
+              ];
+            };
           };
-        };
 
         ghc901Config = (import ./configuration-ghc-901.nix) { inherit pkgs; };
-        ghc921Config = (import ./configuration-ghc-921.nix) { inherit pkgs inputs; };
+        ghc921Config =
+          (import ./configuration-ghc-921.nix) { inherit pkgs inputs; };
 
         # GHC versions
         ghcDefault = pkgs.hlsHpkgs ("ghc"
@@ -215,24 +232,34 @@
         ghc921 = ghc921Config.tweakHpkgs (pkgs.hlsHpkgs "ghc921");
 
         # For markdown support
-        myst-parser = pkgs.python3Packages.callPackage ./myst-parser.nix {};
-        sphinx_rtd_theme = pkgs.python3Packages.sphinx_rtd_theme.overrideAttrs (oldAttrs: {
-          # For https://github.com/readthedocs/sphinx_rtd_theme/pull/1185, otherwise lists are broken locally
-          src = pkgs.fetchFromGitHub {
-            owner = "readthedocs";
-            repo = "sphinx_rtd_theme";
-            rev = "34f81daaf52466366c80003db293d50075c1b896";
-            sha256 = "0rkrsvvqr6g2p3v5vq88jhfp5sd0r1jqjh3vc5y26jn30z8s4fkz";
-          };
-        });
-        pythonWithPackages = pkgs.python3.withPackages (ps: [ps.sphinx myst-parser sphinx_rtd_theme ps.pip]);
+        myst-parser = pkgs.python3Packages.callPackage ./myst-parser.nix { };
+        sphinx_rtd_theme = pkgs.python3Packages.sphinx_rtd_theme.overrideAttrs
+          (oldAttrs: {
+            # For https://github.com/readthedocs/sphinx_rtd_theme/pull/1185, otherwise lists are broken locally
+            src = pkgs.fetchFromGitHub {
+              owner = "readthedocs";
+              repo = "sphinx_rtd_theme";
+              rev = "34f81daaf52466366c80003db293d50075c1b896";
+              sha256 = "0rkrsvvqr6g2p3v5vq88jhfp5sd0r1jqjh3vc5y26jn30z8s4fkz";
+            };
+          });
+        pythonWithPackages = pkgs.python3.withPackages
+          (ps: [ ps.sphinx myst-parser sphinx_rtd_theme ps.pip ]);
 
         docs = pkgs.stdenv.mkDerivation {
           name = "hls-docs";
-          src = pkgs.lib.sourceFilesBySuffices ./. [ ".py" ".rst" ".md" ".png" ".gif" ".svg" ".cabal" ];
+          src = pkgs.lib.sourceFilesBySuffices ./. [
+            ".py"
+            ".rst"
+            ".md"
+            ".png"
+            ".gif"
+            ".svg"
+            ".cabal"
+          ];
           buildInputs = [ pythonWithPackages ];
           # -n gives warnings on missing link targets, -W makes warnings into errors
-          buildPhase = ''cd docs; sphinx-build -n -W . $out'';
+          buildPhase = "cd docs; sphinx-build -n -W . $out";
           dontInstall = true;
         };
 
@@ -251,38 +278,48 @@
                   removeAttrs hlsSources ghc921Config.disabledPlugins
                 else
                   hlsSources));
-            buildInputs = [ gmp zlib ncurses capstone tracy (gen-hls-changelogs hpkgs) pythonWithPackages ]
-              ++ (with hpkgs; [
-                cabal-install
-                hie-bios
-                hlint
-                # ormolu
-                # stylish-haskell
-                opentelemetry-extra
-              ]);
+            buildInputs = [
+              gmp
+              zlib
+              ncurses
+              capstone
+              tracy
+              (gen-hls-changelogs hpkgs)
+              pythonWithPackages
+            ] ++ (with hpkgs; [
+              cabal-install
+              hie-bios
+              hlint
+              # ormolu
+              # stylish-haskell
+              opentelemetry-extra
+            ]);
 
             src = null;
             shellHook = ''
               export LD_LIBRARY_PATH=${gmp}/lib:${zlib}/lib:${ncurses}/lib:${capstone}/lib
               export DYLD_LIBRARY_PATH=${gmp}/lib:${zlib}/lib:${ncurses}/lib:${capstone}/lib
               export PATH=$PATH:$HOME/.local/bin
-              ${if hpkgs.ghc.version != "9.0.1" then (pre-commit-check hpkgs).shellHook else ""}
+              ${if hpkgs.ghc.version != "9.0.1" then
+                (pre-commit-check hpkgs).shellHook
+              else
+                ""}
             '';
           };
         # Create a hls executable
         # Copied from https://github.com/NixOS/nixpkgs/blob/210784b7c8f3d926b7db73bdad085f4dc5d79418/pkgs/development/tools/haskell/haskell-language-server/withWrapper.nix#L16
         mkExe = hpkgs:
           with pkgs.haskell.lib;
-          justStaticExecutables (overrideCabal hpkgs.haskell-language-server
-            (_: {
-              postInstall = ''
-                remove-references-to -t ${hpkgs.ghc} $out/bin/haskell-language-server
-                remove-references-to -t ${hpkgs.shake.data} $out/bin/haskell-language-server
-                remove-references-to -t ${hpkgs.js-jquery.data} $out/bin/haskell-language-server
-                remove-references-to -t ${hpkgs.js-dgtable.data} $out/bin/haskell-language-server
-                remove-references-to -t ${hpkgs.js-flot.data} $out/bin/haskell-language-server
-              '';
-            }));
+          # justStaticExecutables
+          (overrideCabal hpkgs.haskell-language-server (_: {
+            postInstall = ''
+              remove-references-to -t ${hpkgs.ghc} $out/bin/haskell-language-server
+              remove-references-to -t ${hpkgs.shake.data} $out/bin/haskell-language-server
+              remove-references-to -t ${hpkgs.js-jquery.data} $out/bin/haskell-language-server
+              remove-references-to -t ${hpkgs.js-dgtable.data} $out/bin/haskell-language-server
+              remove-references-to -t ${hpkgs.js-flot.data} $out/bin/haskell-language-server
+            '';
+          }));
       in with pkgs; rec {
 
         packages = {
