@@ -146,7 +146,8 @@
               # disable all checks and profiling for our packages
               builtins.mapAttrs (_: drv:
                 with haskell.lib;
-                disableLibraryProfiling (dontCheck (dontHaddock drv)))
+                disableLibraryProfiling
+                (dontCheck (dontHaddock (enableSharedLibraries drv))))
               (lib.composeExtensions
                 (haskell.lib.packageSourceOverrides hlsSources) tweaks hself
                 hsuper));
