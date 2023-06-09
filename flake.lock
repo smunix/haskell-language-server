@@ -17,12 +17,15 @@
       }
     },
     "flake-utils": {
+      "inputs": {
+        "systems": "systems"
+      },
       "locked": {
-        "lastModified": 1678901627,
-        "narHash": "sha256-U02riOqrKKzwjsxc/400XnElV+UtPUQWpANPlyazjH0=",
+        "lastModified": 1685518550,
+        "narHash": "sha256-o2d0KcvaXzTrPRIo0kOLV0/QXHhDQ5DTi+OxcjO8xqY=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "93a2b84fc4b70d9e089d029deacc3583435c2ed6",
+        "rev": "a1720a10a6cfe8234c0e93907ffe81be440f4cef",
         "type": "github"
       },
       "original": {
@@ -91,15 +94,15 @@
     "haskell-hie-bios": {
       "flake": false,
       "locked": {
-        "lastModified": 1679040151,
-        "narHash": "sha256-1Y/9wCoR+nMvSrEr0EHnRBCkUuhqWPgPuukNM5zzRT8=",
-        "owner": "mpickering",
+        "lastModified": 1683794382,
+        "narHash": "sha256-GCf5yVZWphqyMiVvnrGUo5baUCcQz2oo3nL/ahTYVmc=",
+        "owner": "haskell",
         "repo": "hie-bios",
-        "rev": "af192d4116a382afa1721a6f8d77729f98993082",
+        "rev": "57db96016f0b9084e3fc530fd4a0708efc98a6a3",
         "type": "github"
       },
       "original": {
-        "owner": "mpickering",
+        "owner": "haskell",
         "repo": "hie-bios",
         "type": "github"
       }
@@ -151,11 +154,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1680680186,
-        "narHash": "sha256-DqfuocQeQc4pk/ggLntlcf3AoGmnkCcjjL8geGUxv5I=",
+        "lastModified": 1686269668,
+        "narHash": "sha256-Vsq4flmODIh/eOBCY6gRGrAv6uXoBmVBJ5mvcXy6mFk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "391e94a986322a002a084574ccf2fd73814872b1",
+        "rev": "b0baed049431371e9cb36ed83ace9b70459895cc",
         "type": "github"
       },
       "original": {
@@ -217,6 +220,21 @@
       "original": {
         "type": "tarball",
         "url": "https://hackage.haskell.org/package/stylish-haskell-0.14.4.0/stylish-haskell-0.14.4.0.tar.gz"
+      }
+    },
+    "systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
       }
     }
   },

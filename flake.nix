@@ -51,7 +51,7 @@
     };
 
     haskell-hie-bios = {
-      url = "github:mpickering/hie-bios";
+      url = "github:haskell/hie-bios";
       flake = false;
     };
 
